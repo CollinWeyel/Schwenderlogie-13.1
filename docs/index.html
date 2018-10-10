@@ -10,7 +10,13 @@
 		<link rel="stylesheet" href="css/theme/black.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/css/hybrid.css">
+
+		<!-- Light comby
+		<link rel="stylesheet" href="css/theme/white.css">
+		<link rel="stylesheet" href="lib/css/default.css">
+		-->
+
 	</head>
 	<body>
 		<div class="reveal">
@@ -37,6 +43,7 @@
 						* Bauarten	<!-- .element: class="fragment" -->
 						* Anschaltung	<!-- .element: class="fragment" -->
 						* Implementierung	<!-- .element: class="fragment" -->
+						* Quellen	<!-- .element: class="fragment" -->
 					</textarea>
 				</section>
 
@@ -57,33 +64,52 @@
 				</section>
 
 				<!-- Anwendungen -->
-				<section data-markdown>
-					<textarea data-template>
-						## Anwendungen
+				<section>
+					<h2>Anwendungen</h2>
 
-						* Drehzalmessung	<!-- .element: class="fragment" -->
-						* Positionsmessung	<!-- .element: class="fragment" -->
-						* Beispiele:	<!-- .element: class="fragment" -->
-						 * Computermaus	<!-- .element: class="fragment" -->
-						 * Kaffevollautomat	<!-- .element: class="fragment" -->
-						 * Smart Watch	<!-- .element: class="fragment" -->
-					</textarea>
+					<section data-markdown>
+						<textarea data-template>
+
+							* Drehzalmessung	<!-- .element: class="fragment" -->
+							* Positionsmessung	<!-- .element: class="fragment" -->
+							* Beispiele:	<!-- .element: class="fragment" -->
+							 * Computermaus	<!-- .element: class="fragment" -->
+							 * Kaffevollautomat	<!-- .element: class="fragment" -->
+							 * Smart Watch	<!-- .element: class="fragment" -->
+						</textarea>
+					</section>
 				</section>
 
 				<!-- Funktionsprinzip -->
-				<section data-markdown>
-					<textarea data-template>
-						## Funktionsprinzip
+				<section>
+					<h2>Funktionsprinzip</h2>
 
-					</textarea>
+					<section data-markdown>
+						<textarea data-template>
+							![https://upload.wikimedia.org/wikipedia/commons/1/1e/Incremental_directional_encoder.gif](Incremental_directional_encoder.gif)
+						</textarea>
+					</section>
 				</section>
 
 				<!-- Bauarten -->
-				<section data-markdown>
-					<textarea data-template>
-						## Bauarten
+				<section>
+					<h2>Bauarten</h2>
 
-					</textarea>
+					<section data-markdown>
+						<textarea data-template>
+							## Mechanischer Drehregler
+
+							![https://docplayer.org/storage/27/10259986/1539201710/q2mY7oAcBNSAYjzCuBtDbw/10259986.pdf S.13 unten](mechanischerDrehregler.png)
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+						 ## Optischer Drehgeber
+
+						 ![https://rn-wissen.de/wiki/images/5/5f/Gp1a30.jpg](Gp1a30.jpg)
+						</textarea>
+					</section>
 				</section>
 
 				<!-- Anschaltung -->
@@ -95,10 +121,151 @@
 				</section>
 
 				<!-- Implementierung -->
+				<section>
+					<h2>Implementierung</h2>
+
+					<section data-markdown>
+						<textarea data-template>
+							### Setup in C++
+
+							```
+							const int A = 4;
+							const int B = 8;
+
+							int value = 0;
+							int aLast;
+
+							void setup() {
+								Serial.begin(9600);
+
+								pinMode(A, INPUT);
+								pinMode(B, INPUT);
+								aLast = digitalRead(A);
+							}
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### Verarbeitung in C++
+
+							```
+							void loop() {
+								int aNow = digitalRead(A);
+								if (aLast != aNow){
+									if (digitalRead(B) != aNow){
+										value++;
+									}else{
+										value--;
+									}
+									aLast = aNow;
+									Serial.println(value);
+								}
+							}
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### Setup in Assembler
+
+							```
+							INIT_REGISTER:
+								IN	 R16, DDRD		  ; PORTD2 und PORTD3
+								ANDI   R16, 0b11110011	; -> INPUT
+								OUT	DDRD, R16
+								IN	 R16, PORTD		 ; PORTD2 und PORTD3
+								ORI	R16, 0b00001100	; -> PULLUP
+								OUT	PORTD, R16
+
+								IN	 R16, DDRB		  ; PORTB0, PORTB1 und PORTB2
+								ORI	R16, 0b00000111	; -> OUTPUT
+								OUT	DDRB, R16
+
+								LDI	R16, 0b00000000
+								SBI	PORTB, 2
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### MAIN in Assembler
+
+							```
+							MAIN:
+								MOV		R18, R16
+								IN		R16, PIND
+								ANDI	R16, 0b00000100
+								CP		R16, R18
+								BREQ	MAIN
+								CPI		R16, 0b00000100
+								BREQ	MAIN
+
+								IN		R18, PIND
+								ANDI	R18, 0b00001000
+								CPI		R18, 0b00000000
+
+								IN		R18, PORTB
+								CBI		PORTB, 0
+								CBI		PORTB, 1
+								CBI		PORTB, 2
+
+								BREQ	CLOCKWISE
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### ANTICLOCKWISE in Assembler
+							Rot  -> Grün -> Gelb
+
+							```
+							ANTICLOCKWISE:
+								SBRC	R18, 0
+								SBI		PORTB, 2
+								SBRC	R18, 1
+								SBI		PORTB, 0
+								SBRC	R18, 2
+								SBI		PORTB, 1
+								RJMP	MAIN
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### CLOCKWISE in Assembler
+							Gelb  -> Grün -> Rot
+
+							```
+							CLOCKWISE:
+								SBRC	R18, 0
+								SBI		PORTB, 1
+								SBRC	R18, 1
+								SBI		PORTB, 2
+								SBRC	R18, 2
+								SBI		PORTB, 0
+								RJMP	MAIN
+
+							.EXIT
+							```
+						</textarea>
+					</section>
+				</section>
+
+				<!-- Quellen -->
 				<section data-markdown>
 					<textarea data-template>
-						## Implementierung
+						## Quellen
 
+						* Bilder:
+						 * [wikimedia](https://upload.wikimedia.org/wikipedia/commons/1/1e/Incremental_directional_encoder.gif)
+						 * [docplayer](https://docplayer.org/storage/27/10259986/1539201710/q2mY7oAcBNSAYjzCuBtDbw/10259986.pdf) S.13 unten
+						 * [rn-wissen](https://rn-wissen.de/wiki/images/5/5f/Gp1a30.jpg)
 					</textarea>
 				</section>
 			</div>
