@@ -33,34 +33,38 @@
 				</section>
 
 				<!-- Table of Contents -->
-				<section data-markdown>
-					<textarea data-template>
-						## Inhalt
+				<section>
+					<h2>Inhalt</h2>
 
-						* Überblick	<!-- .element: class="fragment" -->
-						* Anwendungen	<!-- .element: class="fragment" -->
-						* Funktionsprinzip	<!-- .element: class="fragment" -->
-						* Bauarten	<!-- .element: class="fragment" -->
-						* Anschaltung	<!-- .element: class="fragment" -->
-						* Implementierung	<!-- .element: class="fragment" -->
-						* Quellen	<!-- .element: class="fragment" -->
-					</textarea>
+					<section data-markdown>
+						<textarea data-template>
+							* Überblick	<!-- .element: class="fragment" -->
+							* Anwendungen	<!-- .element: class="fragment" -->
+							* Funktionsprinzip	<!-- .element: class="fragment" -->
+							* Bauarten	<!-- .element: class="fragment" -->
+							* Anschaltung	<!-- .element: class="fragment" -->
+							* Implementierung	<!-- .element: class="fragment" -->
+							* Quellen	<!-- .element: class="fragment" -->
+						</textarea>
+					</section>
 				</section>
 
 				<!-- Überblick -->
-				<section data-markdown>
-					<textarea data-template>
-						## Überblick
+				<section>
+					<h2>Überblick</h2>
 
-						* Synonyme:	<!-- .element: class="fragment" -->
-						 * Drehgeber	<!-- .element: class="fragment" -->
-						 * Drehimpulsgeber	<!-- .element: class="fragment" -->
-						 * Inkrementalgeber	<!-- .element: class="fragment" -->
-						 * Rotary Encoder	<!-- .element: class="fragment" -->
+					<section data-markdown>
+						<textarea data-template>
+							* Synonyme:	<!-- .element: class="fragment" -->
+							 * Drehgeber	<!-- .element: class="fragment" -->
+							 * Drehimpulsgeber	<!-- .element: class="fragment" -->
+							 * Inkrementalgeber	<!-- .element: class="fragment" -->
+							 * Rotary Encoder	<!-- .element: class="fragment" -->
 
-						* Drehrichtungsermittlung	<!-- .element: class="fragment" -->
-						* Schrittweite einlesen	<!-- .element: class="fragment" -->
-					</textarea>
+							* Drehrichtungsermittlung	<!-- .element: class="fragment" -->
+							* Schrittweite einlesen	<!-- .element: class="fragment" -->
+						</textarea>
+					</section>
 				</section>
 
 				<!-- Anwendungen -->
@@ -69,7 +73,6 @@
 
 					<section data-markdown>
 						<textarea data-template>
-
 							* Drehzalmessung	<!-- .element: class="fragment" -->
 							* Positionsmessung	<!-- .element: class="fragment" -->
 							* Beispiele:	<!-- .element: class="fragment" -->
@@ -113,11 +116,14 @@
 				</section>
 
 				<!-- Anschaltung -->
-				<section data-markdown>
-					<textarea data-template>
-						## Anschaltung
+				<section>
+					<h2>Anschaltung</h2>
 
-					</textarea>
+					<section data-markdown>
+						<textarea data-template>
+
+						</textarea>
+					</section>
 				</section>
 
 				<!-- Implementierung -->
@@ -153,6 +159,7 @@
 							```
 							void loop() {
 								int aNow = digitalRead(A);
+								
 								if (aLast != aNow){
 									if (digitalRead(B) != aNow){
 										value++;
@@ -173,19 +180,19 @@
 
 							```
 							INIT_REGISTER:
-								IN	 R16, DDRD		  ; PORTD2 und PORTD3
-								ANDI   R16, 0b11110011	; -> INPUT
-								OUT	DDRD, R16
-								IN	 R16, PORTD		 ; PORTD2 und PORTD3
-								ORI	R16, 0b00001100	; -> PULLUP
-								OUT	PORTD, R16
+								IN    R16, DDRD       ; PORTD2 und PORTD3
+								ANDI  R16, 0b11110011 ; -> INPUT
+								OUT   DDRD, R16
+								IN    R16, PORTD      ; PORTD2 und PORTD3
+								ORI   R16, 0b00001100 ; -> PULLUP
+								OUT   PORTD, R16
 
-								IN	 R16, DDRB		  ; PORTB0, PORTB1 und PORTB2
-								ORI	R16, 0b00000111	; -> OUTPUT
-								OUT	DDRB, R16
+								IN    R16, DDRB       ; PORTB0, PORTB1 und PORTB2
+								ORI   R16, 0b00000111 ; -> OUTPUT
+								OUT   DDRB, R16
 
-								LDI	R16, 0b00000000
-								SBI	PORTB, 2
+								LDI   R16, 0b00000000
+								SBI   PORTB, 2
 							```
 						</textarea>
 					</section>
@@ -196,24 +203,24 @@
 
 							```
 							MAIN:
-								MOV		R18, R16
-								IN		R16, PIND
-								ANDI	R16, 0b00000100
-								CP		R16, R18
-								BREQ	MAIN
-								CPI		R16, 0b00000100
-								BREQ	MAIN
+								MOV   R18, R16
+								IN    R16, PIND
+								ANDI  R16, 0b00000100
+								CP    R16, R18
+								BREQ  MAIN
+								CPI   R16, 0b00000100
+								BREQ  MAIN
 
-								IN		R18, PIND
-								ANDI	R18, 0b00001000
-								CPI		R18, 0b00000000
+								IN    R18, PIND
+								ANDI  R18, 0b00001000
+								CPI   R18, 0b00000000
 
-								IN		R18, PORTB
-								CBI		PORTB, 0
-								CBI		PORTB, 1
-								CBI		PORTB, 2
+								IN    R18, PORTB
+								CBI   PORTB, 0
+								CBI   PORTB, 1
+								CBI   PORTB, 2
 
-								BREQ	CLOCKWISE
+								BREQ  CLOCKWISE
 							```
 						</textarea>
 					</section>
@@ -225,13 +232,13 @@
 
 							```
 							ANTICLOCKWISE:
-								SBRC	R18, 0
-								SBI		PORTB, 2
-								SBRC	R18, 1
-								SBI		PORTB, 0
-								SBRC	R18, 2
-								SBI		PORTB, 1
-								RJMP	MAIN
+								SBRC  R18,   0
+								SBI   PORTB, 2
+								SBRC  R18,   1
+								SBI   PORTB, 0
+								SBRC  R18,   2
+								SBI   PORTB, 1
+								RJMP  MAIN
 							```
 						</textarea>
 					</section>
@@ -243,13 +250,13 @@
 
 							```
 							CLOCKWISE:
-								SBRC	R18, 0
-								SBI		PORTB, 1
-								SBRC	R18, 1
-								SBI		PORTB, 2
-								SBRC	R18, 2
-								SBI		PORTB, 0
-								RJMP	MAIN
+								SBRC  R18,   0
+								SBI   PORTB, 1
+								SBRC  R18,   1
+								SBI   PORTB, 2
+								SBRC  R18,   2
+								SBI   PORTB, 0
+								RJMP  MAIN
 
 							.EXIT
 							```
@@ -258,15 +265,17 @@
 				</section>
 
 				<!-- Quellen -->
-				<section data-markdown>
-					<textarea data-template>
-						## Quellen
+				<section>
+					<h2>Quellen</h2>
 
-						* Bilder:
-						 * [wikimedia](https://upload.wikimedia.org/wikipedia/commons/1/1e/Incremental_directional_encoder.gif)
-						 * [docplayer](https://docplayer.org/storage/27/10259986/1539201710/q2mY7oAcBNSAYjzCuBtDbw/10259986.pdf) S.13 unten
-						 * [rn-wissen](https://rn-wissen.de/wiki/images/5/5f/Gp1a30.jpg)
-					</textarea>
+					<section data-markdown>
+						<textarea data-template>
+							* Bilder:
+							 * [wikimedia](https://upload.wikimedia.org/wikipedia/commons/1/1e/Incremental_directional_encoder.gif)
+							 * [docplayer](https://docplayer.org/storage/27/10259986/1539201710/q2mY7oAcBNSAYjzCuBtDbw/10259986.pdf) S.13 unten
+							 * [rn-wissen](https://rn-wissen.de/wiki/images/5/5f/Gp1a30.jpg)
+						</textarea>
+					</section>
 				</section>
 			</div>
 		</div>
