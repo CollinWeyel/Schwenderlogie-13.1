@@ -14,8 +14,10 @@ void setup() {
 
 void loop() {
   int aNow = digitalRead(A);
+  int bNow = digitalRead(B);
+
   if (aLast != aNow){
-    if (digitalRead(B) != aNow){
+    if (bNow != aNow){
       value++;
     }else{
       value--;

@@ -26,8 +26,7 @@
 					<textarea data-template>
 						# Drehregler
 
-						Noah Grätz && Collin Weyel
-
+						Noah Grätz && Collin Weyel  
 						13BG – Schwender
 					</textarea>
 				</section>
@@ -158,17 +157,18 @@
 
 							```
 							void loop() {
-								int aNow = digitalRead(A);
-								
-								if (aLast != aNow){
-									if (digitalRead(B) != aNow){
-										value++;
-									}else{
-										value--;
-									}
-									aLast = aNow;
-									Serial.println(value);
-								}
+							  int aNow = digitalRead(A);
+							  int bNow = digitalRead(B);
+
+							  if (aLast != aNow){
+							    if (bNow != aNow){
+							      value++;
+							    }else{
+							      value--;
+							    }
+							    aLast = aNow;
+							    Serial.println(value);
+							  }
 							}
 							```
 						</textarea>
@@ -180,15 +180,15 @@
 
 							```
 							INIT_REGISTER:
-								IN    R16, DDRD       ; PORTD2 und PORTD3
-								ANDI  R16, 0b11110011 ; -> INPUT
+								IN    R16, DDRD        ; PORTD2 und PORTD3
+								ANDI  R16, 0b11110011  ; -> INPUT
 								OUT   DDRD, R16
-								IN    R16, PORTD      ; PORTD2 und PORTD3
-								ORI   R16, 0b00001100 ; -> PULLUP
+								IN    R16, PORTD       ; PORTD2 und PORTD3
+								ORI   R16, 0b00001100  ; -> PULLUP
 								OUT   PORTD, R16
 
-								IN    R16, DDRB       ; PORTB0, PORTB1 und PORTB2
-								ORI   R16, 0b00000111 ; -> OUTPUT
+								IN    R16, DDRB        ; PORTB0, PORTB1 und PORTB2
+								ORI   R16, 0b00000111  ; -> OUTPUT
 								OUT   DDRB, R16
 
 								LDI   R16, 0b00000000
