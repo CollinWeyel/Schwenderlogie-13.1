@@ -17,6 +17,8 @@
 		<link rel="stylesheet" href="lib/css/default.css">
 		-->
 
+		<link rel="stylesheet" href="css/col.css">
+
 	</head>
 	<body>
 		<div class="reveal">
@@ -50,19 +52,34 @@
 
 				<!-- Überblick -->
 				<section>
-					<h2>Überblick</h2>
+					<h2 id="sh">Überblick</h2>
 
-					<section data-markdown>
+					<section id="sh" data-markdown data-background-image="DSC_0700-747x569.jpg">
 						<textarea data-template>
-							* Synonyme:	<!-- .element: class="fragment" -->
-							 * Drehregler	<!-- .element: class="fragment" -->
-							 * Drehimpulsgeber	<!-- .element: class="fragment" -->
-							 * Inkrementalgeber	<!-- .element: class="fragment" -->
-							 * Rotary Encoder	<!-- .element: class="fragment" -->
-
+							* Verarbeitung von Drehimpulsen	<!-- .element: class="fragment" -->
 							* Drehrichtungsermittlung	<!-- .element: class="fragment" -->
-							* Schrittweite einlesen	<!-- .element: class="fragment" -->
-						</textarea>
+							* Ermittlung von Position	<!-- .element: class="fragment" -->
+						</textarea>					
+					</section>
+
+					<section>
+						<table>
+							<tr>
+								<th><u>Inkrementalgeber</u></th>
+								<th><u>Absolutgeber</u></th>
+							</tr>
+							<tr class="fragment">
+								<th>Signal bei Schritt</th>
+								<th>Aktuelle Position</th>
+							</tr>
+							<tr class="fragment">
+								<th>Drehrichtung kann ermittelt werden</th>
+								<th>Keine Drehrichtung</th>
+							</tr>
+							<tr class="fragment">
+								<th>Position unbekannt</th>
+							</tr>
+						</table>
 					</section>
 				</section>
 
@@ -72,7 +89,8 @@
 
 					<section data-markdown>
 						<textarea data-template>
-							* Drehzalmessung	<!-- .element: class="fragment" -->
+							* Drehzalmessung	<!-- .element: class="fragment" -->  
+							![https://www.elmtec.de/artikel/bilder/Rotaro%203.jpg](Rotaro3.jpg)	<!-- .element: class="fragment fade-in-then-out" id="float" -->
 							* Positionsmessung	<!-- .element: class="fragment" -->
 							* Beispiele:	<!-- .element: class="fragment" -->
 							 * Computermaus	<!-- .element: class="fragment" -->
@@ -88,12 +106,16 @@
 
 					<section data-markdown>
 						<textarea data-template>
+							## Inkremental
+
 							![https://upload.wikimedia.org/wikipedia/commons/1/1e/Incremental_directional_encoder.gif](Incremental_directional_encoder.gif)
 						</textarea>
 					</section>
 
 					<section data-markdown>
 						<textarea data-template>
+							## Absolut
+
 							![](Encoder_disc.png)
 						</textarea>
 					</section>
@@ -277,6 +299,8 @@
 					<section data-markdown>
 						<textarea data-template>
 							* Bilder:
+							 * [rs-online](https://www.modmypi.com/image/cache/catalog/electronics/sensors/rotary-encoder/DSC_0700-747x569.jpg)
+							 * [elmtec](https://www.elmtec.de/artikel/bilder/Rotaro%203.jpg)
 							 * [wikimedia](https://upload.wikimedia.org/wikipedia/commons/1/1e/Incremental_directional_encoder.gif)
 							 * [wikimedia](https://upload.wikimedia.org/wikipedia/commons/0/0b/Encoder_disc_(3-Bit_binary).svg)
 							 * [howtomechatronics](https://howtomechatronics.com/wp-content/uploads/2016/07/Rotary-Encoder-How-It-Works-Working-Principle.png)
