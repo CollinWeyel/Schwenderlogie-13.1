@@ -43,7 +43,6 @@
 							* Anwendungen						<!-- .element: class="fragment" -->
 							* Funktionsprinzip					<!-- .element: class="fragment" -->
 							* Bauarten							<!-- .element: class="fragment" -->
-							* Anschaltung						<!-- .element: class="fragment" -->
 							* Implementierung					<!-- .element: class="fragment" -->
 							* Quellen							<!-- .element: class="fragment" -->
 						</textarea>
@@ -144,46 +143,51 @@
 					</section>
 				</section>
 
-				<!-- Anschaltung -->
-				<section>
-					<h2>Anschaltung</h2>
-
-					<section data-markdown>
-						<textarea data-template>
-
-						</textarea>
-					</section>
-				</section>
-
 				<!-- Implementierung -->
 				<section>
 					<h2>Implementierung</h2>
 
 					<section data-markdown>
 						<textarea data-template>
-							### Setup in C++
+							### Variablen in C++
 
 							```
 							const int A = 4;
 							const int B = 8;
+							const int GR = 5;
+							const int RO = 6;
+							const int GE = 7;
 
 							int value = 0;
 							int aLast;
 
-							void setup() {
-								Serial.begin(9600);
-
-								pinMode(A, INPUT);
-								pinMode(B, INPUT);
-								aLast = digitalRead(A);
-							}
+							int state = 000;
 							```
 						</textarea>
 					</section>
 
 					<section data-markdown>
 						<textarea data-template>
-							### Verarbeitung in C++
+							### Setup in C++
+
+							```
+							void setup() {
+								Serial.begin(9600);
+							  
+								pinMode(A, INPUT);
+								pinMode(B, INPUT);
+								aLast = digitalRead(A);
+							  
+								digitalWrite(GR, HIGH);
+								state = 001;
+							  }
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### Main in C++
 
 							```
 							void loop() {
@@ -191,11 +195,14 @@
 							  int bNow = digitalRead(B);
 
 							  if (aLast != aNow){
-							    if (bNow != aNow){
-							      value++;
-							    }else{
-							      value--;
-							    }
+							    if (aLast != aNow){
+									if (bNow != aNow){
+									  value++;
+									  clockwise();
+									}else{
+									  value--;
+									  counterclockwise();
+									}
 							    aLast = aNow;
 							    Serial.println(value);
 							  }
@@ -206,23 +213,72 @@
 
 					<section data-markdown>
 						<textarea data-template>
+							### Clockwise in C++
+
+							```
+							void clockwise(){
+								if (state == 001){
+								  digitalWrite(GR, LOW);
+								  digitalWrite(RO, HIGH);
+								  state = 010;
+								}else if (state == 010){
+								  digitalWrite(RO, LOW);
+								  digitalWrite(GE, HIGH);
+								  state = 100;
+								}else if (state == 100){
+								  digitalWrite(GE, LOW);
+								  digitalWrite(GR, HIGH);
+								  state = 001;
+								}
+							  }
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### Clockwise in C++
+
+							```
+							void counterclockwise(){
+								if (state == 001){
+								  digitalWrite(GR, LOW);
+								  digitalWrite(GE, HIGH);
+								  state = 100;
+								}else if (state == 010){
+								  digitalWrite(RO, LOW);
+								  digitalWrite(GR, HIGH);
+								  state = 001;
+								}else if (state == 100){
+								  digitalWrite(GE, LOW);
+								  digitalWrite(RO, HIGH);
+								  state = 010;
+								}
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
 							### Setup in Assembler
 
 							```
 							INIT_REGISTER:
-								IN    R16, DDRD        ; PORTD2 und PORTD3
-								ANDI  R16, 0b11110011  ; -> INPUT
+								IN    R16, DDRD      
+								ANDI  R16, 0b11110011
 								OUT   DDRD, R16
-								IN    R16, PORTD       ; PORTD2 und PORTD3
-								ORI   R16, 0b00001100  ; -> PULLUP
+								IN    R16, PORTD     
+								ORI   R16, 0b00001100
 								OUT   PORTD, R16
 
-								IN    R16, DDRB        ; PORTB0, PORTB1 und PORTB2
-								ORI   R16, 0b00000111  ; -> OUTPUT
+								IN    R16, DDRB      
+								ORI   R16, 0b00000111
 								OUT   DDRB, R16
 
-								LDI   R16, 0b00000000
-								SBI   PORTB, 2
+								IN    R16, PIND      
+								ANDI  R16, 0b00000100
+
+								SBI   PORTB, 2       
 							```
 						</textarea>
 					</section>
@@ -233,42 +289,43 @@
 
 							```
 							MAIN:
-								MOV   R18, R16
-								IN    R16, PIND
-								ANDI  R16, 0b00000100
-								CP    R16, R18
-								BREQ  MAIN
-								CPI   R16, 0b00000100
-								BREQ  MAIN
+								MOV   R18, R16        
+								IN    R16, PIND       
+								ANDI  R16, 0b00000100 
+								CP    R16, R18        
+								BREQ  MAIN            
 
-								IN    R18, PIND
-								ANDI  R18, 0b00001000
-								CPI   R18, 0b00000000
+								IN    R18, PIND       
+								ANDI  R18, 0b00001000 
+								LSR   R18             
+								CP    R16, R18        
 
-								IN    R18, PORTB
-								CBI   PORTB, 0
-								CBI   PORTB, 1
-								CBI   PORTB, 2
+								IN    R18, PORTB      
+								CBI   PORTB, 0        
+								CBI   PORTB, 1        
+								CBI   PORTB, 2        
 
-								BREQ  CLOCKWISE
+								BREQ  COUNTERCLOCKWISE
+													  
 							```
 						</textarea>
 					</section>
 
 					<section data-markdown>
 						<textarea data-template>
-							### ANTICLOCKWISE in Assembler
+							### COUNTERCLOCKWISE in Assembler
 							Rot  -> Grün -> Gelb
 
 							```
-							ANTICLOCKWISE:
-								SBRC  R18,   0
-								SBI   PORTB, 2
-								SBRC  R18,   1
-								SBI   PORTB, 0
-								SBRC  R18,   2
-								SBI   PORTB, 1
-								RJMP  MAIN
+							COUNTERCLOCKWISE:
+								SBRC  R18, 0      ; Wenn laut R18 die rote LED an war,
+								SBI   PORTB, 2    ; die gruene LED anschalten
+								SBRC  R18, 1      ; Wenn laut R18 die gelbe LED an war,
+								SBI   PORTB, 0    ; die rote LED anschalten
+								SBRC  R18, 2      ; Wenn laut R18 die gruene LED an war,
+								SBI   PORTB, 1    ; die gelbe LED anschalten
+
+								RJMP  MAIN        ; zurück zu MAIN springen
 							```
 						</textarea>
 					</section>
@@ -280,15 +337,14 @@
 
 							```
 							CLOCKWISE:
-								SBRC  R18,   0
-								SBI   PORTB, 1
-								SBRC  R18,   1
-								SBI   PORTB, 2
-								SBRC  R18,   2
-								SBI   PORTB, 0
-								RJMP  MAIN
+								SBRC  R18, 0     ; Wenn laut R18 die rote LED an war,
+								SBI   PORTB, 1   ; die gelbe LED anschalten
+								SBRC  R18, 1     ; Wenn laut R18 die gelbe LED an war,
+								SBI   PORTB, 2   ; die gruene LED anschalten
+								SBRC  R18, 2     ; Wenn laut R18 die gruene LED an war,
+								SBI   PORTB, 0   ; die rote LED anschalten
 
-							.EXIT
+								RJMP  MAIN       ; zurück zu MAIN springen
 							```
 						</textarea>
 					</section>
