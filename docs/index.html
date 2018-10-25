@@ -195,14 +195,13 @@
 							  int bNow = digitalRead(B);
 
 							  if (aLast != aNow){
-							    if (aLast != aNow){
-									if (bNow != aNow){
-									  value++;
-									  clockwise();
-									}else{
-									  value--;
-									  counterclockwise();
-									}
+							    if (bNow != aNow){
+									value++;
+									clockwise();
+								}else{
+									value--;
+									counterclockwise();
+								}	
 							    aLast = aNow;
 							    Serial.println(value);
 							  }
