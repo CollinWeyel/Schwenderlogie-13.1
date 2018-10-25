@@ -313,25 +313,6 @@
 
 					<section data-markdown>
 						<textarea data-template>
-							### COUNTERCLOCKWISE in Assembler
-							Rot  -> Grün -> Gelb
-
-							```
-							COUNTERCLOCKWISE:
-								SBRC  R18, 0      ; Wenn laut R18 die rote LED an war,
-								SBI   PORTB, 2    ; die gruene LED anschalten
-								SBRC  R18, 1      ; Wenn laut R18 die gelbe LED an war,
-								SBI   PORTB, 0    ; die rote LED anschalten
-								SBRC  R18, 2      ; Wenn laut R18 die gruene LED an war,
-								SBI   PORTB, 1    ; die gelbe LED anschalten
-
-								RJMP  MAIN        ; zurück zu MAIN springen
-							```
-						</textarea>
-					</section>
-
-					<section data-markdown>
-						<textarea data-template>
 							### CLOCKWISE in Assembler
 							Gelb  -> Grün -> Rot
 
@@ -345,6 +326,25 @@
 								SBI   PORTB, 0   ; die rote LED anschalten
 
 								RJMP  MAIN       ; zurück zu MAIN springen
+							```
+						</textarea>
+					</section>
+
+					<section data-markdown>
+						<textarea data-template>
+							### COUNTERCLOCKWISE in Assembler
+							Rot  -> Grün -> Gelb
+
+							```
+							COUNTERCLOCKWISE:
+								SBRC  R18, 0      ; Wenn laut R18 die rote LED an war,
+								SBI   PORTB, 2    ; die gruene LED anschalten
+								SBRC  R18, 1      ; Wenn laut R18 die gelbe LED an war,
+								SBI   PORTB, 0    ; die rote LED anschalten
+								SBRC  R18, 2      ; Wenn laut R18 die gruene LED an war,
+								SBI   PORTB, 1    ; die gelbe LED anschalten
+
+								RJMP  MAIN        ; zurück zu MAIN springen
 							```
 						</textarea>
 					</section>
